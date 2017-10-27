@@ -3,12 +3,11 @@ CustomFileTypesView = require './custom-file-types-view'
 
 module.exports = CustomFileTypes =
   customFileTypesView: null
-  modalPanel: null
+  paneItem: null
   subscriptions: null
 
   activate: (state) ->
     @customFileTypesView = new CustomFileTypesView(state.customFileTypesViewState)
-    @modalPanel = atom.workspace.addModalPanel(item: @customFileTypesView.getElement(), visible: false)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -17,7 +16,7 @@ module.exports = CustomFileTypes =
     @subscriptions.add atom.commands.add 'atom-workspace', 'custom-file-types:toggle': => @toggle()
 
   deactivate: ->
-    @modalPanel.destroy()
+    @paneItem.destroy()
     @subscriptions.dispose()
     @customFileTypesView.destroy()
 
@@ -25,9 +24,4 @@ module.exports = CustomFileTypes =
     customFileTypesViewState: @customFileTypesView.serialize()
 
   toggle: ->
-    console.log 'CustomFileTypes was toggled!'
-
-    if @modalPanel.isVisible()
-      @modalPanel.hide()
-    else
-      @modalPanel.show()
+    @paneItem = atom.workspace.getActivePane().activateItem(@customFileTypesView)

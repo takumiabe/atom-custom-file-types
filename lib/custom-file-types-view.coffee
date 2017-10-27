@@ -18,5 +18,8 @@ class CustomFileTypesView
   destroy: ->
     @element.remove()
 
+  getTitle: ->
+    "Custom File Types"
+
   getElement: ->
     @element
